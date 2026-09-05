@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="日期 写的题目 重写的题 需要做的题    5.6 最长公共前缀，反转字符串中的单词，Z字形变换，被围绕的区域，克隆图，最长回文子串     5.7 最长有效括号，复原IP地址(回溯)，全排列，子集，  快排，快排+数组中第k大的元素，最长回文子串   5.9 反转链表Ⅱ，穿针引线     字符串1234567891011121314151617181920212223char[] arra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://yigeljk.github.io/2026/09/05/Leetcode/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="日期 写的题目 重写的题 需要做的题    5.6 最长公共前缀，反转字符串中的单词，Z字形变换，被围绕的区域，克隆图，最长回文子串     5.7 最长有效括号，复原IP地址(回溯)，全排列，子集，  快排，快排+数组中第k大的元素，最长回文子串   5.9 反转链表Ⅱ，穿针引线     字符串1234567891011121314151617181920212223char[] arra">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-05T13:54:17.625Z">
+<meta property="article:modified_time" content="2026-05-09T06:54:43.478Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yigeljk.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Leetcode" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/05/Leetcode/" class="article-date">
+  <time class="dt-published" datetime="2026-09-05T13:54:17.625Z" itemprop="datePublished">2026-09-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <table>
+<thead>
+<tr>
+<th>日期</th>
+<th>写的题目</th>
+<th>重写的题</th>
+<th>需要做的题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5.6</td>
+<td>最长公共前缀，反转字符串中的单词，Z字形变换，被围绕的区域，克隆图，最长回文子串</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>最长有效括号，复原IP地址(回溯)，全排列，子集，</td>
+<td></td>
+<td>快排，快排+数组中第k大的元素，最长回文子串</td>
+</tr>
+<tr>
+<td>5.9</td>
+<td>反转链表Ⅱ，穿针引线</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span>[] <span class="variable">array</span><span class="operator">=</span></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span><span class="keyword">new</span> <span class="title class_">String</span>(array);               <span class="comment">//字符数组转换为字符串</span></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span><span class="keyword">new</span> <span class="title class_">String</span>(array,<span class="number">0</span>,len-<span class="number">1</span>);       <span class="comment">//也可以指定数组的起使位置，只能是数组</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">i</span><span class="operator">=</span><span class="number">1010</span>;</span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span>Integer.toString(i);</span><br><span class="line"></span><br><span class="line"><span class="type">StringBuilder</span> <span class="variable">sb1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;1234&quot;</span>);   <span class="comment">//可以直接加字符串</span></span><br><span class="line">sb1.deleteCharAt(sb1.length()-<span class="number">1</span>);                <span class="comment">//删除最后一个字符</span></span><br><span class="line">sb1.delete(a,b);                                 <span class="comment">//删除[a,b)范围的字符串</span></span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span><span class="string">&quot;ljh&quot;</span>;</span><br><span class="line">s.startsWith(<span class="string">&quot;l&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span>String.valueOf(a);        <span class="comment">//a可以是整数，可以是字符，可以是Boolean，可以是小数</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">i</span><span class="operator">=</span>Integer.parseInt(s);       <span class="comment">//字符串转换为整数</span></span><br><span class="line"><span class="type">int</span> <span class="variable">i</span><span class="operator">=</span>Integer.valueOf(s);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s.equals(str);               <span class="comment">//字符串之间的比较必须使用equals();不可以使用==</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="Map集合"><a href="#Map集合" class="headerlink" title="Map集合"></a>Map集合</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Map</span>&lt;Integer,Integer&gt; <span class="variable">map</span><span class="operator">=</span><span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"><span class="type">Set</span>&lt;Integer&gt; <span class="variable">keys</span><span class="operator">=</span>map.keySet();   <span class="comment">//map集合获取key集合</span></span><br><span class="line"><span class="type">Collection</span>&lt;Integer&gt; <span class="variable">values</span><span class="operator">=</span>map.values();  <span class="comment">//map集合获取value集合</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(Map.Entry&lt;Integer,Integer&gt; entry : map.entrySet())&#123;     <span class="comment">//map集合遍历</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">key</span><span class="operator">=</span>entry.getKey();</span><br><span class="line">    <span class="type">int</span> <span class="variable">value</span><span class="operator">=</span>entry.getValue();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] <span class="variable">arr</span> <span class="operator">=</span> &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125; </span><br><span class="line"><span class="type">int</span>[] <span class="variable">arr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125; </span><br><span class="line"><span class="type">int</span>[] <span class="variable">arr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">5</span>]</span><br><span class="line">    </span><br><span class="line"><span class="type">int</span>[][] <span class="variable">arr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>][];             <span class="comment">//二维数组支持不定义列，支持列数不一样</span></span><br><span class="line"><span class="type">int</span>[][] <span class="variable">arr</span> <span class="operator">=</span> &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">3</span>,<span class="number">4</span>&#125;,&#123;<span class="number">5</span>,<span class="number">6</span>&#125;&#125;;</span><br><span class="line"><span class="type">int</span>[][] <span class="variable">arr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[][]&#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">3</span>,<span class="number">4</span>&#125;,&#123;<span class="number">5</span>,<span class="number">6</span>&#125;&#125;;</span><br><span class="line"><span class="type">int</span>[][] <span class="variable">arr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>][<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">Arrays.fill(arr,<span class="number">1</span>);    <span class="comment">//给arr数组初始化为1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="回溯"><a href="#回溯" class="headerlink" title="回溯"></a>回溯</h2><p>回溯本质上是一颗决策树（可以看为一棵倒着的树），其中<em><strong>for循环</strong></em>代表在树的某一层横向平移，<em><strong>递归调用</strong></em>代表在树上纵向调用</p>
+<p><em><strong>回溯（撤销选择）</strong></em>代表从子节点回到父节点</p>
+<p><em><strong>子集，组合</strong></em>选择*<strong>int类型的start</strong></p>
+<p><strong>全排列</strong>选择<strong>Boolean[] visited</strong>类型,</p>
+<h2 id="堆的方法"><a href="#堆的方法" class="headerlink" title="堆的方法"></a>堆的方法</h2><ul>
+<li><p>offer()   插入元素</p>
+</li>
+<li><p>poll()    移除堆顶元素</p>
+<p><code>PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();</code> 默认是最小堆（堆顶是最小元素）</p>
+<p><code>PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;((a,b)-&gt;b-a);</code> 实现最大堆（堆顶是最大元素）</p>
+<ul>
+<li>Java<code> PriorityQueue</code> 不允许插入 null</li>
+</ul>
+</li>
+</ul>
+<h2 id="栈的方法"><a href="#栈的方法" class="headerlink" title="栈的方法"></a>栈的方法</h2><ul>
+<li>push()</li>
+<li>pop()</li>
+<li>peek()</li>
+</ul>
+<h2 id="队列的方法"><a href="#队列的方法" class="headerlink" title="队列的方法"></a>队列的方法</h2><ul>
+<li>offer()</li>
+<li>poll()</li>
+<li>peek()</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList()可以把数组转换为list集合</span><br><span class="line">    </span><br><span class="line"><span class="type">List</span>&lt;Integer&gt; <span class="variable">list</span><span class="operator">=</span>Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line"><span class="type">int</span>[] <span class="variable">nums</span><span class="operator">=</span><span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="type">List</span>&lt;Integer&gt; <span class="variable">list</span><span class="operator">=</span>Arrays.asList(nums);</span><br><span class="line"></span><br><span class="line">字符串.split(<span class="string">&quot;分隔符&quot;</span>)可以把字符串按分隔符切割为字符串数组</span><br><span class="line"><span class="type">String</span> <span class="variable">s</span><span class="operator">=</span><span class="string">&quot;abc,a,lsd,pwd&quot;</span>;</span><br><span class="line"><span class="type">String</span>[] <span class="variable">array</span><span class="operator">=</span>s.split(<span class="string">&quot;,&quot;</span>);</span><br><span class="line"></span><br><span class="line">集合反转：Collections.reverse(list)；</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="LRU算法实现步骤"><a href="#LRU算法实现步骤" class="headerlink" title="LRU算法实现步骤"></a>LRU算法实现步骤</h3><ul>
+<li><p>题目给出三个方法，初始化缓存，get请求，以及put请求</p>
+<p>实现步骤：①我们实现一个双向链表类</p>
+<p>​                   ②成员变量里面我们要定义capacity，size,以及空的头节点和尾部节点，以及一个Map集合(key是我们的数据的key，value是我们的<code>LinkedNde</code>节点)</p>
+<p>​                    ③初始化方法：我们初始化Map集合，头尾节点，以及size，capacity</p>
+<p>​                    ④get方法：根据map判断链表里面有还是没有，如果没有，直接返回-1，如果有，把该节点给移除，并添加到头节点处</p>
+<p>​                     ⑤put方法：判断链表里面有没有这个节点，如果有，把它取出来，然后移除，插入到链表的头部；如果没有，则判断size是否等于capacity，如果是，则移除尾节点，把这个节点插入头部，如果小于size，则直接插入到头节点，size+1</p>
+<p>​                       ⑥这个过程我们定义了三个辅助方法：移除尾部节点，移除一个节点，头部插入一个节点</p>
+</li>
+</ul>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>解题技巧：</p>
+<ul>
+<li><p>千万不要在脑子里面模拟二叉树递归入栈出栈的过程，坚信自己的方法一定可以返回正确的值，这就是<strong>数学归纳法</strong></p>
+</li>
+<li><p>边界意识：脑子里面需要闪过一个念头：<strong>什么时候停</strong>，否则可能会无限循环</p>
+</li>
+<li><p>单层决策：我们拿到左右子树的结果，怎么加工我的答案</p>
+</li>
+<li><p>如果觉得不模拟就写不出代码，<strong>不要在脑子里面想</strong>，直接写在纸上画出“三层逻辑图”</p>
+<p>1.二叉树的最大路径和（定义一个方法，表示包含当前节点，路径向下，并且可以给父节点返回的最大路径和）</p>
+<p>2.完全二叉树的节点树，定义一个方法，表示完全二叉树的节点数，然后递归，左右两个子树相加+1返回</p>
+</li>
+</ul>
+<h2 id="一些不常见的表达式"><a href="#一些不常见的表达式" class="headerlink" title="一些不常见的表达式"></a>一些不常见的表达式</h2><p>lambda表达式来排序</p>
+<p>集合转换为数组</p>
+<p>数组转换为集合</p>
+<p>字符串切割<code>s.substring(a,b)</code>;</p>
+<p>字符串比较：<code>a.equals(b)</code></p>
+<p>数组比较：<code>Arrays.equals(a,b)</code>;</p>
+<p><strong>基础模块</strong>： 哈希表、双指针、滑动窗口（这部分最简单，先拿分）。</p>
+<p><strong>线性结构</strong>： 链表、栈与队列（掌握基础操作）。</p>
+<p><strong>树与图</strong>： 二叉树遍历、BFS&#x2F;DFS（面试重灾区）。</p>
+<h2 id="LinkedList-双向链表的方法）"><a href="#LinkedList-双向链表的方法）" class="headerlink" title="LinkedList(双向链表的方法）"></a>LinkedList(双向链表的方法）</h2><p><code>addFirst/addLast</code></p>
+<p><code>getFirst/getLast</code></p>
+<p><code>removeFirst/removeLast</code></p>
+<h2 id="课程表思路"><a href="#课程表思路" class="headerlink" title="课程表思路"></a>课程表思路</h2><h2 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h2><p><code>deleteCharAt(index)</code> 删除对应的字符</p>
+<ul>
+<li>字符串反转：String reversed&#x3D;new StringBuilder(s).reverse().toString();</li>
+</ul>
+<h2 id="Redis的持久化机制"><a href="#Redis的持久化机制" class="headerlink" title="Redis的持久化机制"></a>Redis的持久化机制</h2><ul>
+<li>RDB快照（默认开启）</li>
+<li>AOF日志（默认不开启）</li>
+<li>AOF混合持久化机制（开启AOF以后再使用命令可以实现）</li>
+</ul>
+<p>我们一般开启选择开启<code>AOF混合持久化机制</code>，因为AOF在高写入场景下，我们的<code>redis</code>会<code>fork</code>一个子进程来去帮助我们去扫描，实现AOF日志的一个<code>rewrite</code>，子进程会有一个独立的虚拟内存空间，但是子进程和父进程共享一个物理内存，当父进程写数据的时候，会触发系统调用，从而使得物理内存的大量拷贝，导致<code>redis</code>的性能下降，以及消耗的物理内存不断增加</p>
+<p>所以我们对于<code>redis</code>也要设置一个最大的内存值，防止<code>redis</code>在<code>fork</code>的时候以及运行的时候吃光系统内存</p>
+<h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><ul>
+<li>集合反转：Collections.reverse(list)；</li>
+</ul>
+<h2 id="虚拟线程"><a href="#虚拟线程" class="headerlink" title="虚拟线程"></a>虚拟线程</h2><p>虚拟线程jdk21的一个新特性，它是由JVM来进行调度，不是传统的OS线程，所以可以显著减少CPU的上下文切换导致的性能开销。</p>
+<ul>
+<li>大量虚拟线程会使用少量平台线程来执行，比较适合IO密集型，在IO的时候我们的OS主线程可以运行其他虚拟线程</li>
+</ul>
+<h2 id="更新数据库删除缓存失败了怎么办啊"><a href="#更新数据库删除缓存失败了怎么办啊" class="headerlink" title="更新数据库删除缓存失败了怎么办啊"></a>更新数据库删除缓存失败了怎么办啊</h2><ul>
+<li>我们可以把消息投喂给<code>rabbitmq</code>，通过<code>rabbitmq</code>的持久化机制以及ACK确认重试机制在消费者处来确保缓存删除</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yigeljk.github.io/2026/09/05/Leetcode/" data-id="cmtog387b000658u364kwc3ha" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/09/05/Mybatis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/09/05/JVM/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E6%83%85%E6%84%9F%E5%92%A8%E8%AF%A2%E5%8A%A9%E6%89%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

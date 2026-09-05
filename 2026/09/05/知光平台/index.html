@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="项目概述：知识社区 APP，支持发布知识、点赞&#x2F;收藏、关注取关、首页 Feed 展示与对象存储直传，AI 生成摘要等等。项目各模块进行了充分详细的设计以满足高并发和高可用需求 知光平台各种问题： https:&#x2F;&#x2F;www.kdocs.cn&#x2F;l&#x2F;cbQ4km9JL776 技术栈：Java 21 ，Spring Boot，Spring AI ，MyBatis，MySQL，Redis，Kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://yigeljk.github.io/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="项目概述：知识社区 APP，支持发布知识、点赞&#x2F;收藏、关注取关、首页 Feed 展示与对象存储直传，AI 生成摘要等等。项目各模块进行了充分详细的设计以满足高并发和高可用需求 知光平台各种问题： https:&#x2F;&#x2F;www.kdocs.cn&#x2F;l&#x2F;cbQ4km9JL776 技术栈：Java 21 ，Spring Boot，Spring AI ，MyBatis，MySQL，Redis，Kafka">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-05T13:54:17.661Z">
+<meta property="article:modified_time" content="2026-07-16T05:52:11.715Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yigeljk.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-知光平台" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/" class="article-date">
+  <time class="dt-published" datetime="2026-09-05T13:54:17.661Z" itemprop="datePublished">2026-09-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>项目概述：知识社区 APP，支持发布知识、点赞&#x2F;收藏、关注取关、首页 Feed 展示与对象存储直传，AI 生成摘要等等。项目各模块进行了充分详细的设计以满足高并发和高可用需求</p>
+<p>知光平台各种问题： <a target="_blank" rel="noopener" href="https://www.kdocs.cn/l/cbQ4km9JL776">https://www.kdocs.cn/l/cbQ4km9JL776</a></p>
+<p>技术栈：<strong>Java 21 ，Spring Boot，Spring AI ，MyBatis，MySQL，Redis，Kafka，Canal，Elasticsearch，RAG</strong>。</p>
+<ul>
+<li><p>Feed 流：采用三级缓存架构且设计了缓存一致性策略，本地 Caffeine + Redis 页面缓存 + Redis 片段缓存。自定义 hotkey 探测机制，基于热点检测按层级延长缓存时长，叠加随机抖动抗雪崩。</p>
+</li>
+<li><p>用户关系：实现关注功能，采用一主多从+事件驱动模型。关注事件发生时，在同一事务中插入关注表和 Outbox 表，使用 Canal 订阅 Outbox 表的 binlog，并将变更事件发布到 Kafka 异步更新其他数据源。</p>
+</li>
+<li><p>点赞功能：采用Kafka异步写+写聚合的形式应对高并发写场景。采用位图的结构高效实现幂等和判重。</p>
+</li>
+<li><p>计数功能：笔记维度(点赞)与用户维度(关注)等采用定制化 Redis SDS 二进制紧凑计数，使用 Lua 脚本进行原子更新</p>
+</li>
+<li><p>笔记发布：采用渐进式发布流程，发布的图片、视频，Markdown 文档等都存入 OSS 对象存储系统，采用后端发布预签名+前端直传的形式上传，节省前后端传输资源。并接入 DeepSeek AI 一键生成文章摘要。</p>
+</li>
+<li><p>AI 问答功能：设计并实现基于 RAG 的知文问答服务，采用 Elasticsearch 作为向量数据库存储知文切片向；引入两级分块策略（按 Markdown 标题切段 + 固定800字符切片+100字符重叠）提升检索召回质量。</p>
+</li>
+<li><p>搜索系统：基于 Elasticsearch 构建内容搜索与联想建议功能，支持关键词检索，标签过滤，采用 search_after 游标分页保证深分页稳定性</p>
+</li>
+</ul>
+<h2 id="知光平台项目"><a href="#知光平台项目" class="headerlink" title="知光平台项目"></a>知光平台项目</h2><p>outbox 事件<br>│<br>├── entity &#x3D; “knowpost”（文章）<br>│     │<br>│     ├── op &#x3D; “INSERT”    发布<br>│     ├── op &#x3D; “UPDATE”    更新元数据 &#x2F; 确认内容 &#x2F; 设置置顶 &#x2F; 设置可见性<br>│     └── op &#x3D; “DELETE”    软删除<br>│<br>└── entity &#x3D; “following”（关注关系）<br>      │<br>      ├── op &#x3D; “FollowCreated”   关注<br>      └── op &#x3D; “FollowCanceled”  取消关注</p>
+<p>ES 支持：<br>关键词检索（BM25）<br>向量检索（KNN）<br>混合检索（最常用）</p>
+<p>两个jwt的token type不一样</p>
+<h3 id="feed流缓存系统："><a href="#feed流缓存系统：" class="headerlink" title="feed流缓存系统："></a>feed流缓存系统：</h3><ul>
+<li>首先我们的本地缓存存储第一个页的一个feed流，然后我们的redis里面存储一个zset集合，这个zset集合以时间作为排序，存储对应的作品的一个id；然后redis里面还存储片段缓存，比如说每个作品的概要：用户，图片url，内容概要等；还存储详细缓存，比如作品的详细内容，以及对应的用户，所有的作品图片url</li>
+<li>然后缓存一致性的话，我们比如添加一个作品或者删除一个作品，首页第一页的feed流会发生变化，所以我们再发布或者删除第一页的作品的时候为保证缓存的一致性，我们会删除本地缓存；</li>
+<li>当本地缓存的没用的时候，我们的线程去zset里面截去前20条作品，然后拼接写入到我们的本地缓存</li>
+</ul>
+<h2 id="点赞系统为什么使用聚合桶然后批量刷入SDS"><a href="#点赞系统为什么使用聚合桶然后批量刷入SDS" class="headerlink" title="点赞系统为什么使用聚合桶然后批量刷入SDS"></a>点赞系统为什么使用聚合桶然后批量刷入SDS</h2><ol>
+<li>消除 Read-Modify-Write：SDS 的每次更新都需要完整读写+编解码，Hash 的 HINCRBY 是轻量增量操作</li>
+<li>时间窗口折叠：同一时间窗口内的多次增量聚合成一次批量应用</li>
+<li>顺序 IO 优化：批量刷写 SDS 比随机读写更高效</li>
+<li>架构扩展性：为未来 Kafka 重放、灰度发布提供基础设施</li>
+</ol>
+<h3 id="知文的SDS里面存储什么"><a href="#知文的SDS里面存储什么" class="headerlink" title="知文的SDS里面存储什么"></a>知文的SDS里面存储什么</h3><ul>
+<li><p>知文的SDS里面存储点赞数和收藏数</p>
+</li>
+<li><p>每个字段四个字节</p>
+</li>
+<li><p>为什么不使用hash？</p>
+<ul>
+<li>内存不友好，是指针，缓存命中率低</li>
+<li>hash的key占空间</li>
+<li>sds固定20字节，hash可能会膨胀</li>
+<li>hash无法进行位图重建</li>
+</ul>
+</li>
+<li><p>知文的SDS可以基于点赞bitmap和收藏bitmap进行重建</p>
+</li>
+<li><p>用户的SDS可以基于关注表和粉丝表，知文表以及对应知文的SDS来重建</p>
+</li>
+</ul>
+<p>jwt的type类型是不一样的</p>
+<h3 id="关注粉丝系统"><a href="#关注粉丝系统" class="headerlink" title="关注粉丝系统"></a>关注粉丝系统</h3><p>SDS 适合字段数量固定、追求极致内存效率的场景。用户统计计数（5个字段）正好符合这个模式。</p>
+<ul>
+<li>每个用户在redis里面都有两个zset，记录关注和取关的用户</li>
+<li>每个用户在redis里面还有一个定制化的SDS，存储<code>关注数</code>，<code>粉丝数</code>，<code>获赞数</code>，<code>发文数</code>，<code>获得的收藏数</code></li>
+<li>每个字段四个字节</li>
+<li>用户关注另一个用户，先通过事务更新关注表和<code>outbox</code>表，然后canal监听MySQL的<code>bing log</code>，然后异步更新redis的SDS的<code>关注数</code>和<code>粉丝数</code>，还有MySQL数据库的<code>粉丝表</code></li>
+</ul>
+<h3 id="点赞收藏系统"><a href="#点赞收藏系统" class="headerlink" title="点赞收藏系统"></a>点赞收藏系统</h3><ul>
+<li>用户给一个作品点赞，然后后端先使用这个作品的位图来判断用户是否之前点过赞，如果没有则返回成功，位图的对应值变为1</li>
+<li>然后发送给Kafka来去异步消费，给用户返回点赞成功</li>
+<li>Kafka的消费者将点赞数写道一个hash结构里面的聚合桶里面，对应的点赞数+1，然后定时1秒批量写入对应知文的<code>SDS</code>数据结构里面以及对应知文的用户的SDS里面</li>
+</ul>
+<h3 id="feed流系统"><a href="#feed流系统" class="headerlink" title="feed流系统"></a>feed流系统</h3><p>缓存一致性策略：我们采用的是最终一致性，删除的话会删除详情页缓存，用户点开查不到；</p>
+<p>发布的话，当我们的二级换存过期会自动去数据库里面回源，拿到id列表，在到数据库里面更新不存在的片段缓存；</p>
+<ul>
+<li>本地缓存：存储feed流直接存储某一页本地完整的概要，用的时候直接获取</li>
+<li>redis存储某一页feed流的具体id，碎片缓存存储的是具体id的概要</li>
+<li>对于知文的顶置，删除，私密，修改这些，我们只做删除详情页缓存，对于feed流的概要缓存，id列表，我们只做弱一致性，等待feed流自动过期</li>
+</ul>
+<p>caffine本地缓存：  15秒</p>
+<p>public record FeedPageResponse(<br>    List<FeedItemResponse> items,  &#x2F;&#x2F; 当前页的 20 个条目              <code>存储的是这一页20个作品每个作品的概要</code><br>    int page,                       &#x2F;&#x2F; 页码<br>    int size,                       &#x2F;&#x2F; 每页大小<br>    boolean hasMore                 &#x2F;&#x2F; 是否有下一页<br>)</p>
+<p>redis页面缓存：  <em>60-89 秒</em></p>
+<ul>
+<li><p>存储的是ID列表+hasMore</p>
+</li>
+<li><p>│ feed:public:ids:10:2026040912:1  → List [“1001”,”1002”…] │  ← 第1页的10个ID</p>
+<p>│ feed:public:ids:10:2026040912:2  → List [“1011”,”1012”…] │  ← 第2页的10个ID</p>
+<p>│ feed:public:ids:10:2026040912:3  → List [“1021”,”1022”…] │  ← 第3页的10个ID</p>
+<p>│ …                                                         │</p>
+<p>│ 每一页都是独立的 List key，不存在”全部 ID 的 List”           │</p>
+</li>
+</ul>
+<p>feed流知文的片段缓存：</p>
+<p>public record FeedItemResponse(<br>        String id,              &#x2F;&#x2F; ① 作品的唯一标识符<br>        String title,           &#x2F;&#x2F; ② 作品标题<br>        String description,     &#x2F;&#x2F; ③ 作品概要&#x2F;正文摘要<br>        String coverImage,     &#x2F;&#x2F; ④ 作品封面图 URL<br>        List<String> tags,     &#x2F;&#x2F; ⑤ 标签列表（前端展示用）<br>        String authorAvatar,    &#x2F;&#x2F; ⑥ 作者头像 URL<br>        String authorNickname, &#x2F;&#x2F; ⑦ 作者昵称<br>        String tagJson,         &#x2F;&#x2F; ⑧ 标签的 JSON 字符串（给前端组件用）<br>        Long likeCount,        &#x2F;&#x2F; ⑨ 点赞总数（公开计数）              <code>SDS</code><br>        Long favoriteCount,    &#x2F;&#x2F; ⑩ 收藏总数（公开计数）         <code> SDS</code><br>        Boolean liked,         &#x2F;&#x2F; ⑪ 当前用户是否点过赞（个人态）<br>        Boolean faved,          &#x2F;&#x2F; ⑫ 当前用户是否收藏过（个人态）     <code>基于bitmq来重建</code><br>        Boolean isTop          &#x2F;&#x2F; ⑬ 是否置顶<br>)</p>
+<h4 id="自定义hot-key检测"><a href="#自定义hot-key检测" class="headerlink" title="自定义hot key检测"></a>自定义hot key检测</h4><ul>
+<li>只是作品相关的会采用hot key延迟，其他的比如feed流本地的内容，id列表这些不会延长</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yigeljk.github.io/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/" data-id="cmtog387i000i58u375uf2mub" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E6%83%85%E6%84%9F%E5%92%A8%E8%AF%A2%E5%8A%A9%E6%89%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

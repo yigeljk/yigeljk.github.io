@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="计算机网络数据从网卡到达应用程序的整个链路 网卡先把物理层的数据转换为以太网帧，然后通过DMA将数据拷贝到内核的网卡环形缓冲区，然后中断cpu cpu中断后，转向处理内核中的以太网帧，将数据包去帧头，去IP头，去tcp头，通过四元组对应到其socket 内核将数据拷贝到对对应socket连接的内核接受缓冲区 然后内核查看struct_socket查看该socket是否被注册到了红黑树里面，如果是，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://yigeljk.github.io/2026/09/05/%E5%85%AB%E8%82%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="计算机网络数据从网卡到达应用程序的整个链路 网卡先把物理层的数据转换为以太网帧，然后通过DMA将数据拷贝到内核的网卡环形缓冲区，然后中断cpu cpu中断后，转向处理内核中的以太网帧，将数据包去帧头，去IP头，去tcp头，通过四元组对应到其socket 内核将数据拷贝到对对应socket连接的内核接受缓冲区 然后内核查看struct_socket查看该socket是否被注册到了红黑树里面，如果是，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-05T13:54:17.637Z">
+<meta property="article:modified_time" content="2026-05-16T09:31:44.835Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yigeljk.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-八股" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/05/%E5%85%AB%E8%82%A1/" class="article-date">
+  <time class="dt-published" datetime="2026-09-05T13:54:17.637Z" itemprop="datePublished">2026-09-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h4 id="数据从网卡到达应用程序的整个链路"><a href="#数据从网卡到达应用程序的整个链路" class="headerlink" title="数据从网卡到达应用程序的整个链路"></a>数据从网卡到达应用程序的整个链路</h4><ol>
+<li>网卡先把物理层的数据转换为以太网帧，然后通过DMA将数据拷贝到内核的网卡环形缓冲区，然后中断cpu</li>
+<li>cpu中断后，转向处理内核中的以太网帧，将数据包去帧头，去IP头，去tcp头，通过四元组对应到其socket</li>
+<li>内核将数据拷贝到对对应socket连接的内核接受缓冲区</li>
+<li>然后内核查看struct_socket查看该socket是否被注册到了红黑树里面，如果是，我们去将fd添加到<code>就绪队列</code>里面；如果不是，那么就不会去通知事件；</li>
+<li>内核不会在这个时候遍历红黑树，因为有映射关系，红黑树只是为了更快的添加和删除fd，应用在调用epoll_ctl add,delete的时候</li>
+<li>然后内核唤醒tomcat的监听线程，监听线程将这个socket连接的内核缓冲区的数据拷贝到用户缓冲区，并将其作为<code>HttpServletRequest</code>对象请求交给工作线程来处理</li>
+<li>由工作线程执行过滤器，servlet执行后续逻辑</li>
+</ol>
+<ul>
+<li>tomcat会把整个http请求全部转换为字符串，包括请求行，请求头，请求体</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /api/test HTTP/1.1</span><br><span class="line">Host: localhost:8080</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Content-Length: 38</span><br><span class="line"></span><br><span class="line">&#123;&quot;name&quot;:&quot;张三&quot;,&quot;age&quot;:20&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>然后封装成 HttpServletRequest 对象，再把这个 Request 对象 交给工作线程。</p>
+</li>
+<li><p>封装 <strong>HttpServletRequest</strong>（里面存原始字节，还没解码）</p>
+<p>转给工作线程 → 执行 <strong>Filter</strong>（设置编码规则）</p>
+</li>
+<li><p>工作线程拿着<code>HttpServletRequest</code>对象先执行过滤器，将原始字节流转换为字符流，进入<code>DispactherServlet</code>前端控制器，解析url，通过HandlerMapping映射到对应的Controller方法，然后执行<code>Interceptor</code>拦截器，进行接口校验，身份校验，然后再通过<code>HandlerAdapter</code>来去执行对应的Controller方法</p>
+</li>
+<li><p>然后进入spring boot，<code> @RequestBody</code>如果发现请求头里面的content-Type是application&#x2F;json，spring的jackon会把这个对象里面的<code>请求体部分</code>转换为DTO对象</p>
+</li>
+</ul>
+<h3 id="实体类和DTO和数据库表和HTTP的映射关系"><a href="#实体类和DTO和数据库表和HTTP的映射关系" class="headerlink" title="实体类和DTO和数据库表和HTTP的映射关系"></a>实体类和DTO和数据库表和HTTP的映射关系</h3><ul>
+<li>DTO类对应HTTP的请求体的数据，因为数据库表里面有限敏感字段不能给到http里面，DTO字段名和JSON的字段名对应一样才能序列化和反序列化，如果不对应，就要手动映射</li>
+<li>实体类的字段名和数据库的字段名也要对应，数据库驱动解析二进制流 → 变成 JDBC 的 ResultSet 行列表格结构–&gt;mybatis把行列表格结构转换为实体类对象</li>
+</ul>
+<p><strong>Bean 工厂的整套执行流程 &#x3D; Spring Bean 完整生命周期</strong></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h3 id="Tomcat过滤器"><a href="#Tomcat过滤器" class="headerlink" title="Tomcat过滤器"></a>Tomcat过滤器</h3><ul>
+<li>编码预处理</li>
+<li>IP限流，防爬虫</li>
+<li>判断是否登录</li>
+<li>跨域配置</li>
+</ul>
+<h4 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h4><ul>
+<li><p>跨域是指浏览器只能让前端js的代码不能访问其他IP或者端口，必须访问浏览器打开网页请求的那个端口</p>
+</li>
+<li><p>要么自己的后端服务在过滤器配置逻辑，要么是在前端服务器配置代理</p>
+</li>
+</ul>
+<h3 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h3><ul>
+<li>项目里，绝大多数 Bean 都是【无状态】的，只有极少数特殊场景才是【有状态】的。</li>
+<li>无状态就是没有成员变量，仅提供业务逻辑方法有状态就是含有成员变量对象</li>
+<li>这些bean在<code>Spring</code>容器启动以后提前被创建，交由<code>Spring</code>容器管理，然后是单例模式，全局仅创建一个对象</li>
+<li>这些对象可以被我们的请求线程来调用</li>
+</ul>
+<h3 id="Autowire和Resource的区别"><a href="#Autowire和Resource的区别" class="headerlink" title="Autowire和Resource的区别"></a>Autowire和Resource的区别</h3><ul>
+<li>@autowire默认按照类型注入，有相同类型的bean的时候可以按照名称注入，使用@qualifier指定名称</li>
+<li>@resource默认按照名称注入，名称找不到按照类型注入</li>
+</ul>
+<h1 id="Java，JVM，MySQL，Redis，Spring，MQ，多线程，计算机网络，操作系统"><a href="#Java，JVM，MySQL，Redis，Spring，MQ，多线程，计算机网络，操作系统" class="headerlink" title="Java，JVM，MySQL，Redis，Spring，MQ，多线程，计算机网络，操作系统"></a>Java，JVM，MySQL，Redis，Spring，MQ，多线程，计算机网络，操作系统</h1><h3 id="TCP的四次挥手为什么要time-wait"><a href="#TCP的四次挥手为什么要time-wait" class="headerlink" title="TCP的四次挥手为什么要time_wait"></a>TCP的四次挥手为什么要time_wait</h3><ul>
+<li>要接受一些延迟的网络包</li>
+<li>去防止最后一次FIN在网络上面丢包</li>
+</ul>
+<h3 id="Transactional注解"><a href="#Transactional注解" class="headerlink" title="@Transactional注解"></a>@Transactional注解</h3><ul>
+<li>就是反射只是判断有没有对应的注解，但是事务需要有环绕，方法执行后要判断有没有异常抛出，如果有异常要执行回滚</li>
+<li>Spring AOP 故意只支持 public，所以非public方法事务失效</li>
+<li>springAOP会捕获方法的异常，如果我们事务方法内部自己捕获了，就不会对外抛出，也会失效</li>
+<li>同一个类内部的方法调用也会导致springAOP失效，原生对象自调用，不走代理</li>
+</ul>
+<h2 id="Kafka的幂等性"><a href="#Kafka的幂等性" class="headerlink" title="Kafka的幂等性"></a>Kafka的幂等性</h2><ul>
+<li>生产断点幂等性可以通过开启Kafka的幂等性配置（enable-idempotence&#x3D;true），broker可以通过<code>PID</code>（消费者id），<code>broker</code>，<code>partition</code>，<code>sequence</code>(消费者生成的递增序列号，每发送一条消息就+1)四元组来实现判断重复消息</li>
+<li>消费端可以通过业务的幂等性，比如说主键的唯一性或者把消息序列存储到redis或者MySQL</li>
+<li>多消费者插同一条数据的时候，可以直接插redis的set集合或者insert唯一id的数据库里面，防止并发的情况发生</li>
+</ul>
+<p>,</p>
+<h3 id="MySQL的B-树结构"><a href="#MySQL的B-树结构" class="headerlink" title="MySQL的B+树结构"></a>MySQL的B+树结构</h3><h4 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h4><ul>
+<li>叶子节点存储一整行数据，非叶子节点存储的是主键值和指针</li>
+</ul>
+<h4 id="二级索引"><a href="#二级索引" class="headerlink" title="二级索引"></a>二级索引</h4><ul>
+<li>叶子节点存储二级索引以及其对应的主键值，非叶子节点存储的是二级索引值以及其对应的指针</li>
+</ul>
+<h3 id="innodb支持的其他索引结构"><a href="#innodb支持的其他索引结构" class="headerlink" title="innodb支持的其他索引结构"></a>innodb支持的其他索引结构</h3><h3 id="SPATIAL-INDEX-R树-空间索引-SPATIAL-INDEX"><a href="#SPATIAL-INDEX-R树-空间索引-SPATIAL-INDEX" class="headerlink" title="SPATIAL INDEX  R树 空间索引 SPATIAL INDEX"></a>SPATIAL INDEX  R树 空间索引 SPATIAL INDEX</h3><ul>
+<li>可以存储二维坐标，比如门店位置，经纬度，用户位定位</li>
+</ul>
+<h3 id="FULL-TEXT-基于全文索引的倒排索引"><a href="#FULL-TEXT-基于全文索引的倒排索引" class="headerlink" title="FULL-TEXT   基于全文索引的倒排索引"></a>FULL-TEXT   基于全文索引的倒排索引</h3><ul>
+<li>查询的时候直接使用Where MATCH(…)  AGAINST(…); 代替全表遍历的like语句</li>
+</ul>
+<h3 id="自适应哈希索引"><a href="#自适应哈希索引" class="headerlink" title="自适应哈希索引"></a>自适应哈希索引</h3><ul>
+<li>innodb自动建立的优化，不由用户建立，是当某个索引值被频繁访问的时候会去内存缓存这个值加速查询</li>
+</ul>
+<h2 id="Linux文件系统"><a href="#Linux文件系统" class="headerlink" title="Linux文件系统"></a>Linux文件系统</h2><ul>
+<li><p>每个进程里面有独立的文件描述符表的映射，fd-&gt;内核文件表项，每个进程最多1024个文件描述符</p>
+</li>
+<li><p>内核文件表项有文件的权限，读写偏移量，被几个fd使用的消息，并且指向内存或者磁盘中真正的inode节点</p>
+</li>
+<li><p>inode节点存储：</p>
+<p>1.文件大小<br>2.权限（读、写、执行）<br>3.所有者、所属组<br>4.时间：创建时间、修改时间、访问时间<br>5.磁盘数据块指针（最关键）<br>6.记录这个文件的内容存在硬盘哪几个扇区、哪几块</p>
+</li>
+<li><p>inode节点在磁盘上面，指向磁盘的真实位置；磁盘上面有真实的inode表</p>
+</li>
+</ul>
+<h2 id="多线程的实现方式"><a href="#多线程的实现方式" class="headerlink" title="多线程的实现方式"></a>多线程的实现方式</h2><ul>
+<li>继承<strong>thread</strong>类的方式来实现</li>
+<li>实现<strong>Runnable</strong>接口的方式来实现</li>
+<li>利用<strong>Callable</strong>接口和<strong>Future</strong>接口的方式实现</li>
+</ul>
+<h3 id="http2-0和protobuf的注意点"><a href="#http2-0和protobuf的注意点" class="headerlink" title="http2.0和protobuf的注意点"></a>http2.0和protobuf的注意点</h3><ul>
+<li>http2.0只是把数据进行切分，然后切分的数据装进二进制帧里面，不会压缩业务数据，只是把json格式的数据放进不同的二进制帧里面</li>
+<li>protouf二进制序列化协议是把业务数据使用二进制序列化进行压缩，把json的文本格式转换为二进制格式，从人类可读变为机器可读</li>
+</ul>
+<h3 id="Java创建对象的几种方式"><a href="#Java创建对象的几种方式" class="headerlink" title="Java创建对象的几种方式"></a>Java创建对象的几种方式</h3><ul>
+<li>new关键字</li>
+<li>通过类的对象，拿到她的构造器，去newInstance实例化对象；<code>class.getConstructor(String s).newInstance()</code>;  这个是默认是获取public方法      <code>getDeclaredConstructor().newInstance()</code>可以获取如何修饰符的构造方法</li>
+<li>通过clone方法，实现cloneable接口，可以进行深拷贝或者浅拷贝</li>
+<li>可以进行序列化创建对象</li>
+</ul>
+<h3 id="Spring的知识点"><a href="#Spring的知识点" class="headerlink" title="Spring的知识点"></a>Spring的知识点</h3><h4 id="AOP（面向切面编程）"><a href="#AOP（面向切面编程）" class="headerlink" title="AOP（面向切面编程）"></a>AOP（面向切面编程）</h4><ul>
+<li>将我们代码里面的一些通用的逻辑给它提取出来，通过JDK动态代理或者CGLIB动态代理来去实现我们的一个代理类；从而让我们的业务逻辑显得不是那么冗余</li>
+<li>如果目标类实现了接口，那么我们的代理类也实现这个接口，即JDK动态代理；如果目标类没有实现接口，那么我们的代理类就继承目标类</li>
+<li>我们的业务在调用目标方法的时候，实际上调用的是代理类，有@before（方法执行前），@after（方法执行后），@afterreturning（方法正常返回后），@throwafter（方法抛出异常后），或者@around（环绕通知），</li>
+</ul>
+<h4 id="spring-bean的生命周期"><a href="#spring-bean的生命周期" class="headerlink" title="spring bean的生命周期"></a>spring bean的生命周期</h4><ul>
+<li>实例化</li>
+<li>属性注入</li>
+<li>初始化（实例化，属性注入之后，容许我们做一些初始化工作，比如初始化连接池，加载缓存，读取配置）</li>
+<li>如果说有代理，那么这一步会创建代理对象</li>
+<li>使用</li>
+<li>销毁</li>
+</ul>
+<h4 id="代理对象的创建流程"><a href="#代理对象的创建流程" class="headerlink" title="代理对象的创建流程"></a>代理对象的创建流程</h4><ul>
+<li><p>自定义调用处理器实现invocationHanlder，重写invoke方法</p>
+</li>
+<li><p>Proxy.newInstance(类加载器，目标实现的接口，调用处理器)返回代理类对象</p>
+</li>
+</ul>
+<h4 id="spring的三级缓存解决循环依赖"><a href="#spring的三级缓存解决循环依赖" class="headerlink" title="spring的三级缓存解决循环依赖"></a>spring的三级缓存解决循环依赖</h4><ul>
+<li><p>一级缓存：成品</p>
+</li>
+<li><p>二级缓存：半成品</p>
+</li>
+<li><p>三级缓存：bean工厂对象</p>
+</li>
+<li><p>首先需要被代理的A类先创建实例，然后给到三级缓存的bean工厂</p>
+</li>
+<li><p>然后创建B类的实例对象，从三级缓存地方找到A的工厂，工厂生成A的代理类对象，然后放入二级缓存</p>
+</li>
+<li><p>B属性注入A之后，就是成品，到达一级缓存</p>
+</li>
+<li><p>A注入B的对象，也到达一级缓存</p>
+</li>
+</ul>
+<h3 id="打破双亲委派的方法"><a href="#打破双亲委派的方法" class="headerlink" title="打破双亲委派的方法"></a>打破双亲委派的方法</h3><ul>
+<li>重写classLoad方法，去掉原来先委托父类的逻辑，直接先自己加载，自己加载不了再委托父类</li>
+</ul>
+<h3 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h3><h4 id="浅拷贝实现的方法"><a href="#浅拷贝实现的方法" class="headerlink" title="浅拷贝实现的方法"></a>浅拷贝实现的方法</h4><ul>
+<li>对象类实现cloneable接口</li>
+<li>使用spring的一个方法：BeanUtils.CopyProperites（）方法，这个是静态变量</li>
+</ul>
+<h4 id="深拷贝的实现方法"><a href="#深拷贝的实现方法" class="headerlink" title="深拷贝的实现方法"></a>深拷贝的实现方法</h4><ul>
+<li>对象实现cloneable接口</li>
+<li>序列化反序列化来实现深拷贝</li>
+</ul>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><ul>
+<li>重写clone方法本质不是new对象，而是通过内存中拷贝复制对象来实现的</li>
+</ul>
+<h2 id="死锁的条件"><a href="#死锁的条件" class="headerlink" title="死锁的条件"></a>死锁的条件</h2><ul>
+<li>互斥条件</li>
+<li>持有并等待条件</li>
+<li>不可抢占条件</li>
+<li>环路等待条件</li>
+</ul>
+<h3 id="Synchronized和reentrantlock的区别"><a href="#Synchronized和reentrantlock的区别" class="headerlink" title="Synchronized和reentrantlock的区别"></a>Synchronized和reentrantlock的区别</h3><ul>
+<li>synchronized抢锁失败是blocked，锁释放后由操作系统唤醒</li>
+<li>reentrantlock抢锁失败是waiting，放弃锁，放弃cpu，进入无限的阻塞，必须其他线程调用notify()或者notifyAll()来唤醒</li>
+</ul>
+<h3 id="线上排查cpu利用率100"><a href="#线上排查cpu利用率100" class="headerlink" title="线上排查cpu利用率100%"></a>线上排查<code>cpu</code>利用率100%</h3><ul>
+<li>先使用<code>top</code>命令来查看具体哪个进程<code>cpu</code>占用率高</li>
+<li>再使<code>top -Hp</code>命令来查看是进程中的哪个线程占有率比较高</li>
+<li>然后我们将得到的线程id转换为16进制</li>
+<li>在终端执行<code>jstack &lt;PID&gt; | grep &lt;threadID&gt; -A 20</code>，jstack命令是查看该进程的所有线程调用栈</li>
+</ul>
+<h2 id="MySQL的联合索引"><a href="#MySQL的联合索引" class="headerlink" title="MySQL的联合索引"></a>MySQL的联合索引</h2><ul>
+<li><p>当前<strong>第一个字段的值固定</strong>的情况下，下一个字段是<strong>局部有序</strong>的</p>
+</li>
+<li><p>先按第一个字段进行全局排序，然后当<strong>第一个字段相同</strong>的情况下再根据第二个字段进行<strong>局部排序</strong></p>
+</li>
+<li><p>联合索引的<strong>叶子节点</strong>存储的是<strong>联合索引+主键</strong>，联合索引属于非主键索引</p>
+</li>
+</ul>
+<h2 id="JAVA虚拟线程"><a href="#JAVA虚拟线程" class="headerlink" title="JAVA虚拟线程"></a>JAVA虚拟线程</h2><ul>
+<li><p>Java虚拟线程是jdk21正式稳定版推出，</p>
+</li>
+<li><p>虚拟线程是基于JVM，也就是用户态调度的，OS线程是基于内核态进行调度的，OS线程上下文的开销要比虚拟线程的大</p>
+</li>
+<li><p>传统我们的线程阻塞了，我们的OS线程也会被阻塞，这时候可能需要我们的操作系统上下文切换执行其他的线程，而我们的虚拟线程</p>
+<p>如果阻塞了，JVM会让承载他的OS线程来执行其他的虚拟线程，复用我们的OS线程，不需要进行内核级别的上下文切换，性能较高、</p>
+</li>
+</ul>
+<h2 id="MySQL日志"><a href="#MySQL日志" class="headerlink" title="MySQL日志"></a>MySQL日志</h2><ul>
+<li><p><strong>执行流程</strong>：正常执行：undo log（写磁盘）→ redo log buffer → COMMIT → redo log prepare（把核心数据刷盘） → binlog 刷盘 → redo log 刷盘（状态位） + 改 commit → 事务完成；</p>
+</li>
+<li><p><strong>undo log</strong>（记录数据修改前的原始版本），<strong>bing log</strong>（记录数据库的行为，比如sql行为），<strong>redo log</strong>（记录数据库哪个数据页的哪个偏移量，改成了什么值）</p>
+</li>
+<li><p>我们MySQL在执行sql的时候，首先会把旧数据写入undo log里面，然后再写入redo log里面的buffer中（未刷盘），将状态改为<strong>prepare</strong>，然后我们把修改的数据写入bing log里面（并进行刷盘），然后我们将redo log进行刷盘并且同步将redo log的状态改为<strong>commit</strong></p>
+</li>
+<li><p>崩溃恢复的时候，我们先检查redo log的状态，如果是<strong>commit</strong>，我们直接将redo log的数据刷到数据库的磁盘页中。如果是<strong>prepare</strong>，我们先检查bing log，binglog里面有记录的话，判断为应该提交的事务，我们会补做redo log，如果bing log里面也没有数据的话，我们会直接回滚。</p>
+</li>
+<li><p>执行commit语句，只是开始提交，我们的事务不一定提交</p>
+</li>
+<li><p>edo log 和 binlog 的设计目标、存储格式、语义完全不同，无法从 redo log 反向生成 “合法且一致的 binlog”，所以我们先提交bing log，再提交redo log</p>
+</li>
+<li><p><strong>redo log</strong>和<strong>bing log</strong>都是顺序写，redo log是自动循环覆盖，bing log是追加写</p>
+</li>
+<li><p>MySQL的快照读和写请求之间不会阻塞，但是当前读和写请求就会阻塞，因为如果是行读，会加<strong>行锁</strong>，如果是范围读，会加<strong>间隙锁</strong></p>
+</li>
+<li><p>垂直分库分表是解决解耦的问题，水平分库分表是解决单表数据量太大的问题</p>
+</li>
+</ul>
+<h2 id="Redis日志"><a href="#Redis日志" class="headerlink" title="Redis日志"></a>Redis日志</h2><ul>
+<li><p>redis的持久化机制有<strong>AOF</strong>和<strong>RDB</strong>，RDB默认是开启的</p>
+</li>
+<li><p>AOF会保留redis执行的命令，当redis执行的命令比较多的时候，Redis会进行重写，此时redis会fork一个子进程来去重写日志，删除那些冗余的命令，这时候如果redis主线程正在进行写入操作，会出现COW（Copy On Write写时复制）会触发大量的系统调用，导致大量的内存复制，性能下降</p>
+</li>
+<li><p>RDB快照有两种创建方式，第一种，直接save，使用主线程来去创建RDB快照，但是会阻塞主线程。第二种，进行bgsave（background save），redis会fork一个子进程，子进程在后台会创建RDB快照，当fork子进程后，如果redis正在写入数据，那么会触发COW（copy  on write写时复制），触发大量的系统调用来去复制内存</p>
+<ul>
+<li><strong>原因</strong>：因为fork一个子进程后，父进程和子进程共享一块物理内存空间，如果一个进程要写，就会触发系统调用，进行内存复制</li>
+</ul>
+</li>
+</ul>
+<h2 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h2><h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><ul>
+<li><p>多态的核心：同一个行为，不同的表现形式</p>
+</li>
+<li><p>多态的分类：<strong>重载</strong>（编译时多态）和<strong>重写</strong>（运行时多态）</p>
+</li>
+<li><p>重载调用的具体方法是在编译时期确定的（根据参数类型确定），而重写是运行的时候才知道会具体调用哪个方法</p>
+</li>
+<li><p>重载：参数列表必须不同，返回值可以不同</p>
+</li>
+<li><p>重写：参数列表必须相同，返回值相同或者是子类</p>
+</li>
+<li><p>重写（运行时多态）：编译时看左边，我们重写的时候调用的方法需要看左边的父类或者接口里面是否有这个方法，如果没有，会报错，如果有，运行的时候实际执行的是右边实现类或者子类的具体方法</p>
+</li>
+</ul>
+<h3 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h3><ul>
+<li>可以修饰<strong>类</strong>，<strong>方法</strong>，<strong>变量</strong></li>
+<li>修饰类的话，这个类不可以被继承。比如<strong>String</strong>类设置为final，保证其功能不被子类篡改</li>
+<li>修饰方法，这个方法不可以被重写</li>
+<li>修饰变量的话<ul>
+<li>如果是基本数据类型，这个变量的值不可以改变</li>
+<li>如果是引用数据类型，这个变量的引用地址不可以改变，但是对象的内容可以改变</li>
+</ul>
+</li>
+</ul>
+<h3 id="static关键字"><a href="#static关键字" class="headerlink" title="static关键字"></a>static关键字</h3><ul>
+<li><p>static可以修饰<strong>内部类</strong>，<strong>方法</strong>，<strong>变量</strong></p>
+</li>
+<li><p>静态变量，方法，和内部类可以被所有实例所共享，类加载的时候只加载一次</p>
+</li>
+<li><p><strong>静态方法</strong>存储在方法区里面，<strong>静态变量</strong>存储在堆内存的老年代里面（基本数据类型和引用数据类型都存储在堆里面），<strong>静态内部类</strong>的定义是存储在方法区里面，静态内部类的实例是存储在堆里面</p>
+</li>
+<li><p>静态方法和静态变量我们不需要创建实例，直接可以通过类名来调用。创建<strong>静态内部类</strong>的实例的时候也不需要创建这个静态内部类的外部类实例，直接可以根据外部类的类名来创建它的静态内部类</p>
+<ul>
+<li>静态方法不可以直接调用非静态方法，必须创建这个类的实例，再进行调用</li>
+</ul>
+</li>
+<li><p>非静态方法调用非静态方法，同一个类里面可以直接来调用，不同类必须创建实例才可以调用</p>
+<ul>
+<li>静态方法调用静态方法，可以直接通过类名来调用</li>
+</ul>
+</li>
+<li><p>非静态方法调用静态方法，可以直接通过类名来调用</p>
+</li>
+</ul>
+<h2 id="Integer缓存机制"><a href="#Integer缓存机制" class="headerlink" title="Integer缓存机制"></a>Integer缓存机制</h2><p>-128到127，此范围内的Integer对象会被缓存复用</p>
+<h2 id="MySQL的可重复读"><a href="#MySQL的可重复读" class="headerlink" title="MySQL的可重复读"></a>MySQL的可重复读</h2><ul>
+<li>只要我们最开始就使用for update，是不会出现幻读的</li>
+<li>出现幻读的情况<ul>
+<li>第一次select，第二次 select … for update，中间有事务提交</li>
+<li>第一次select，第二次update  …  where  ，第三次select。如果第二次刚好update了其他事务提交的数据，就会出现幻读</li>
+</ul>
+</li>
+</ul>
+<h3 id="http1-1和http2-0的区别"><a href="#http1-1和http2-0的区别" class="headerlink" title="http1.1和http2.0的区别"></a>http1.1和http2.0的区别</h3><ul>
+<li><p>http1：协议头(请求行+请求头)是文本格式，body里面是json格式</p>
+</li>
+<li><p>http2.0：协议头(请求行+请求头)是二进制格式，body里面是json格式</p>
+</li>
+<li><p>protobuf是body里面的格式也是二进制格式，比json的文本格式传输效率高</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yigeljk.github.io/2026/09/05/%E5%85%AB%E8%82%A1/" data-id="cmtog387d000e58u3ab3364wm" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/09/05/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/09/05/Untitled/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E6%83%85%E6%84%9F%E5%92%A8%E8%AF%A2%E5%8A%A9%E6%89%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

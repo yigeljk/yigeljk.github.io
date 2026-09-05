@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="根据代码阅读，你们这套系统里的「多租户隔离」主要是 分库（按租户）+ 可选分表（按学年 dataScope）+ 应用层身份与数据范围校验 组合起来的，而不是单纯在一张大表里用 WHERE tenant_id &#x3D; ? 这一种模式。  1. 核心：按 tenant_id 的物理分库（ShardingSphere）在 LzdAutoDataSourceConfig 里，当配置打开 按租户分库（Nacos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://yigeljk.github.io/2026/09/05/%E8%AE%BA%E4%B9%8B%E9%81%93%E9%A1%B9%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="根据代码阅读，你们这套系统里的「多租户隔离」主要是 分库（按租户）+ 可选分表（按学年 dataScope）+ 应用层身份与数据范围校验 组合起来的，而不是单纯在一张大表里用 WHERE tenant_id &#x3D; ? 这一种模式。  1. 核心：按 tenant_id 的物理分库（ShardingSphere）在 LzdAutoDataSourceConfig 里，当配置打开 按租户分库（Nacos">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-05T13:54:17.648Z">
+<meta property="article:modified_time" content="2026-07-16T05:51:51.010Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yigeljk.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-论之道项目" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/05/%E8%AE%BA%E4%B9%8B%E9%81%93%E9%A1%B9%E7%9B%AE/" class="article-date">
+  <time class="dt-published" datetime="2026-09-05T13:54:17.648Z" itemprop="datePublished">2026-09-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>根据代码阅读，你们这套系统里的「多租户隔离」主要是 分库（按租户）+ 可选分表（按学年 dataScope）+ 应用层身份与数据范围校验 组合起来的，而不是单纯在一张大表里用 <code>WHERE tenant_id = ?</code> 这一种模式。</p>
+<hr>
+<h2 id="1-核心：按-tenant-id-的物理分库（ShardingSphere）"><a href="#1-核心：按-tenant-id-的物理分库（ShardingSphere）" class="headerlink" title="1. 核心：按 tenant_id 的物理分库（ShardingSphere）"></a>1. 核心：按 <code>tenant_id</code> 的物理分库（ShardingSphere）</h2><p>在 <code>LzdAutoDataSourceConfig</code> 里，当配置打开 按租户分库（Nacos 里常见的 <code>global-database-sharding-by-tenant-id: true</code>）时，会为 ShardingSphere 配置 默认库分片策略：分片键是列 <code>tenant_id</code>，算法是自定义的 <code>LZD_DATABASE_SHARDING_BY_TENANT_ID</code>。</p>
+<p>​        rule.getShardingAlgorithms().put(LZD_DATABASE_NON_SHARDING, new AlgorithmConfiguration(LZD_DATABASE_NON_SHARDING, new Properties()));</p>
+<p>​        rule.getShardingAlgorithms().put(LZD_DATABASE_SHARDING_BY_TENANT_ID, new AlgorithmConfiguration(LZD_DATABASE_SHARDING_BY_TENANT_ID, new Properties()));</p>
+<p>​        rule.getShardingAlgorithms().put(LZD_TABLE_NON_SHARDING, new AlgorithmConfiguration(LZD_TABLE_NON_SHARDING, new Properties()));</p>
+<p>​        rule.getShardingAlgorithms().put(LZD_TABLE_SHARDING_BY_DATA_SCOPE_ID, new AlgorithmConfiguration(LZD_TABLE_SHARDING_BY_DATA_SCOPE_ID, new Properties()));</p>
+<p>​        &#x2F;&#x2F; 默认分库分表规则</p>
+<p>​        rule.setDefaultDatabaseShardingStrategy(properties.isGlobalDatabaseShardingByTenantId() ? new StandardShardingStrategyConfiguration(COLUMN_TENANT_ID, LZD_DATABASE_SHARDING_BY_TENANT_ID) : new StandardShardingStrategyConfiguration(COLUMN_TENANT_ID, LZD_DATABASE_NON_SHARDING));</p>
+<p>​        rule.setDefaultTableShardingStrategy(properties.isGlobalTableShardingByDataScopeId() ? new StandardShardingStrategyConfiguration(COLUMN_DATA_SCOPE_ID, LZD_TABLE_SHARDING_BY_DATA_SCOPE_ID) : new StandardShardingStrategyConfiguration(COLUMN_TENANT_ID, LZD_TABLE_NON_SHARDING));</p>
+<p><code>LzdDatabaseShardingByTenantIdAlgorithm</code> 把 租户 ID 映射成 真实库名（前缀 + 从 <code>tenantId</code> 解析出的段，例如文档里写的 <code>JWC.SCU</code> → <code>lzd_scu_jwc</code> 这类规则），并在需要时 动态注册 指向该库的 <code>DataSource</code>，同时用线程变量绑定当前要连的库：</p>
+<p>​    public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<String> preciseShardingValue) {</p>
+<p>​        String tenantId &#x3D; preciseShardingValue.getValue();</p>
+<p>​        &#x2F;&#x2F; … 计算 tdb …</p>
+<p>​        &#x2F;&#x2F; 当前线程的 数据源</p>
+<p>​        String currTdb &#x3D; DriverDatabaseConnectionManager.LOOKUP_KEY_HOLDER.get();</p>
+<p>​        if (null !&#x3D; currTdb) {</p>
+<p>​            return currTdb;</p>
+<p>​        }</p>
+<p>​        &#x2F;&#x2F; … 若不存在则创建&#x2F;注册 DataSource …</p>
+<p>​        DriverDatabaseConnectionManager.LOOKUP_KEY_HOLDER.set(tdb);</p>
+<p>​        DriverDatabaseConnectionManager.DATA_SOURCE_HOLDER.set(dataSources.get(storageNode));</p>
+<p>​        return tdb;</p>
+<p>​    }</p>
+<p>另外，你们对 ShardingSphere 的 <code>KernelProcessor</code> 做了补丁：在生成执行计划后，若线程里已经指定了目标库名，会把执行单元 强制路由到该数据源，避免和默认路由不一致：</p>
+<p>​        &#x2F;&#x2F; LZD 修改源码</p>
+<p>​        String tdb &#x3D; DriverDatabaseConnectionManager.LOOKUP_KEY_HOLDER.get();</p>
+<p>​        if (null !&#x3D; tdb &amp;&amp; !tdb.isBlank()) {</p>
+<p>​            result.getExecutionUnits().forEach(executionUnit -&gt; executionUnit.setDataSourceName(tdb));</p>
+<p>​        }</p>
+<p>含义：租户之间在存储上首先是 不同数据库（或至少不同逻辑库映射到不同物理库），这是最强的隔离层。</p>
+<hr>
+<h2 id="2-租户内再细分：data-scope-id-分表（学年-数据范围）"><a href="#2-租户内再细分：data-scope-id-分表（学年-数据范围）" class="headerlink" title="2. 租户内再细分：data_scope_id 分表（学年&#x2F;数据范围）"></a>2. 租户内再细分：<code>data_scope_id</code> 分表（学年&#x2F;数据范围）</h2><p>同一条业务数据在「同一租户库」里，还可能按 <code>data_scope_id</code>（注释里写的是类似学年 <code>20212022</code>）做 表级分片。是否参与由实体上的 <code>@TableShardingByDataScopeId</code> 以及全局开关 <code>global-table-sharding-by-data-scope-id</code> 等共同决定；<code>LzdScanner.tableSharding</code> 会为每张表挂上是否按 <code>data_scope_id</code> 分表的策略。</p>
+<p>也就是说：租户 → 库；学年&#x2F;数据范围 → 部分表再物理拆表，进一步减少单表数据量、避免不同学年数据混在一起。</p>
+<hr>
+<h2 id="3-实体与查询约定：appId-tenantId-dataScopeId"><a href="#3-实体与查询约定：appId-tenantId-dataScopeId" class="headerlink" title="3. 实体与查询约定：appId &#x2F; tenantId &#x2F; dataScopeId"></a>3. 实体与查询约定：<code>appId</code> &#x2F; <code>tenantId</code> &#x2F; <code>dataScopeId</code></h2><p>所有业务表的基类 <code>XEntity</code> 上带有三个维度字段，语义在注释里写得很清楚：</p>
+<p>​    public String appId &#x3D; “GP”;</p>
+<p>​    @Column(columnDefinition &#x3D; “varchar(64) not null default ‘’ comment ‘所属租户ID’ “)</p>
+<p>​    public String tenantId &#x3D; “”;</p>
+<p>​    @Column(columnDefinition &#x3D; “int not null default 0 comment ‘所属租户数据范围整数：20212022、20222023’ “)</p>
+<p>​    public int dataScopeId &#x3D; 0;</p>
+<p>分页查询封装 <code>RPP</code> 在构造时可以把 当前租户的 <code>tenantId</code> 写进 where 条件，避免漏带租户条件：</p>
+<p>​    public RPP(@NotNull U where, @NotNull String tenantId) {</p>
+<p>​        this(where);</p>
+<p>​        Assert.notNull(tenantId, “tenantId must not null.”);</p>
+<p>​        this.where.setTenantId(tenantId);</p>
+<p>​    }</p>
+<p>还有一些 特例基类：例如 <code>SingleEntity</code> 固定默认租户、不参与多租户维度；<code>TenantInfo</code> 把 <code>dataScopeId</code> 固定为 0，表示租户元数据不按学年分。</p>
+<hr>
+<h2 id="4-请求上下文：JWT-→-登录用户-→-租户信息"><a href="#4-请求上下文：JWT-→-登录用户-→-租户信息" class="headerlink" title="4. 请求上下文：JWT → 登录用户 → 租户信息"></a>4. 请求上下文：JWT → 登录用户 → 租户信息</h2><p><code>LzdMvcConfigurer</code> 里：从 JWT 解析出 <code>tenantId</code> &#x2F; <code>userid</code>，加载 <code>TenantUser</code>，并调用 <code>lzdRestful.tenant(tenantId)</code> 把 <code>TenantInfo</code> 放进 <code>LzdUtil.TENANT_INFO_HOLDER</code>（<code>TransmittableThreadLocal</code>），供后续业务使用。</p>
+<p>这样 当前请求绑定的租户 来自已登录身份，而不是仅靠前端随意传 <code>tenantId</code>（内部接口另有 <code>/inner/</code> 与密钥逻辑）。</p>
+<hr>
+<h2 id="5-业务上的「数据范围」校验：-DataScope"><a href="#5-业务上的「数据范围」校验：-DataScope" class="headerlink" title="5. 业务上的「数据范围」校验：@DataScope"></a>5. 业务上的「数据范围」校验：<code>@DataScope</code></h2><p><code>DataScopeAspect</code> 在带 <code>@DataScope</code> 的方法上，会结合 当前登录用户的 <code>tenantId</code>，对入参里的 <code>dataScopeId</code> 做 是否锁定等业务校验（例如某学年是否允许修改），这是 在库表隔离之外的权限&#x2F;状态层。</p>
+<hr>
+<h2 id="小结（如何理解「多租户隔离」）"><a href="#小结（如何理解「多租户隔离」）" class="headerlink" title="小结（如何理解「多租户隔离」）"></a>小结（如何理解「多租户隔离」）</h2><table>
+<thead>
+<tr>
+<th align="left">层次</th>
+<th align="left">机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">存储</td>
+<td align="left">开启全局按租户分库时，ShardingSphere 以 <code>tenant_id</code> 为分库键，映射到独立库名并路由连接；可选按 <code>data_scope_id</code> 分表。</td>
+</tr>
+<tr>
+<td align="left">元数据与查询</td>
+<td align="left">实体带 <code>appId</code> &#x2F; <code>tenantId</code> &#x2F; <code>dataScopeId</code>；分页等场景通过 <code>RPP(where, tenantId)</code> 等把租户条件带入查询。</td>
+</tr>
+<tr>
+<td align="left">请求</td>
+<td align="left">JWT + 拦截器设置 登录用户与租户信息 到 ThreadLocal。</td>
+</tr>
+<tr>
+<td align="left">业务</td>
+<td align="left"><code>@DataScope</code> 等对学年&#x2F;数据范围做额外校验。</td>
+</tr>
+</tbody></table>
+<p>整体上，你们更接近 「租户 &#x3D; 独立数据库（+ 部分表按学年再拆）」 的隔离模型，而不是所有租户共库只靠应用层 <code>WHERE</code> 过滤一种做法。若你需要对某条接口「隔离是否可能被绕过」做审计，可以再针对该接口看：SQL 是否总带 <code>tenant_id</code>、分库键是否总能从当前登录上下文得到等——当前 Ask 模式我只能做代码级说明，不改代</p>
+<p>是的，可以这样理解。</p>
+<hr>
+<h2 id="一、分工关系"><a href="#一、分工关系" class="headerlink" title="一、分工关系"></a>一、分工关系</h2><table>
+<thead>
+<tr>
+<th align="left">谁负责</th>
+<th align="left">做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">我们</td>
+<td align="left">实现 <code>doSharding()</code>，定义“分到哪个库”的逻辑</td>
+</tr>
+<tr>
+<td align="left"><code>ShardingSphere</code></td>
+<td align="left">调用 <code>doSharding()</code> 拿到库名，选数据源、改写 SQL、执行、管理连接等</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、doSharding-需要自己重写"><a href="#二、doSharding-需要自己重写" class="headerlink" title="二、doSharding() 需要自己重写"></a>二、<code>doSharding()</code> 需要自己重写</h2><p>实现 <code>StandardShardingAlgorithm&lt;String&gt;</code> 时，必须实现 <code>doSharding()</code>：</p>
+<p>public class<code> LzdDatabaseShardingByTenantIdAlgorithm</code> implements <code>StandardShardingAlgorithm</code><String> {</p>
+<p>​    @Override</p>
+<p>​    public String<code> doSharding</code>(Collection<String> availableTargetNames, </p>
+<p>​                          <code>  PreciseShardingValue</code><String> preciseShardingValue) {</p>
+<p>​        <em>&#x2F;&#x2F; 我们实现：根据 tenant_id 返回目标库名</em></p>
+<p>​        String tenantId &#x3D; preciseShardingValue.getValue();</p>
+<p>​        String tdb &#x3D; “…”;  <em>&#x2F;&#x2F; 计算逻辑</em></p>
+<p>​        return tdb;  <em>&#x2F;&#x2F; 返回给 ShardingSphere</em></p>
+<p>​    }</p>
+<p>}</p>
+<hr>
+<h2 id="三、ShardingSphere-负责的部分"><a href="#三、ShardingSphere-负责的部分" class="headerlink" title="三、ShardingSphere 负责的部分"></a>三、ShardingSphere 负责的部分</h2><ol>
+<li>解析 SQL：识别分片键（如 <code>tenant_id</code>）</li>
+<li>调用算法：执行 <code>doSharding()</code> 得到目标库名</li>
+<li>选择数据源：根据返回的库名找到对应数据源</li>
+<li>改写 SQL：把逻辑表名换成物理表名（如库名.表名）</li>
+<li>执行 SQL：通过选出的数据源执行</li>
+<li>结果合并：多库&#x2F;多表时的结果合并</li>
+</ol>
+<hr>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><ul>
+<li>分库&#x2F;分表的规则：由我们在 <code>doSharding()</code> 里实现。</li>
+<li>分库&#x2F;分表的执行：由 ShardingSphere 负责。</li>
+</ul>
+<p>可以理解为：我们定规则，ShardingSphere 负责执行。</p>
+<h3 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h3><p>根据项目代码和 Nacos 配置，这些数据库大致用途如下：</p>
+<hr>
+<h2 id="一、租户业务库（lzd-前缀，ShardingSphere-分库）"><a href="#一、租户业务库（lzd-前缀，ShardingSphere-分库）" class="headerlink" title="一、租户业务库（lzd_ 前缀，ShardingSphere 分库）"></a>一、租户业务库（<code>lzd_</code> 前缀，ShardingSphere 分库）</h2><p>按 <code>tenant_id</code> 分库，命名规则：<code>lzd_</code> + <code>tid</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">lzd_lun51</td>
+<td align="left">主库 &#x2F; 平台库。平台级数据（cfl_region、cfl_university）、租户元数据（bsl_tenant_info）、LUN51 租户业务。Nacos 中 <code>database-name</code> 指向此库。</td>
+</tr>
+<tr>
+<td align="left">lzd_szcu_jwc</td>
+<td align="left">JWC.SZCU 租户业务库（如教务处等）。</td>
+</tr>
+<tr>
+<td align="left">lzd_mode_mini</td>
+<td align="left">MINI.MODE 租户（精简版）。</td>
+</tr>
+<tr>
+<td align="left">lzd_mode_pro</td>
+<td align="left">专业版租户。</td>
+</tr>
+<tr>
+<td align="left">lzd_mode_ultra</td>
+<td align="left">旗舰版租户。</td>
+</tr>
+<tr>
+<td align="left">lzd_mode_yjs</td>
+<td align="left">研究生版租户（yjs &#x3D; 研究生）。租户配置中有 <code>databaseName: &quot;lzd_mode_yjs&quot;</code>。</td>
+</tr>
+<tr>
+<td align="left">lzd_lun51_sales</td>
+<td align="left">可能是 LUN51 的销售&#x2F;商务相关库，或独立租户。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、项目级-模板库"><a href="#二、项目级-模板库" class="headerlink" title="二、项目级 &#x2F; 模板库"></a>二、项目级 &#x2F; 模板库</h2><table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">lzd_table_tpl</td>
+<td align="left">表结构模板库。Nacos 中 <code>database-name: lzd_table_tpl</code> 时用于 JPA DDL、建表模板。</td>
+</tr>
+<tr>
+<td align="left">lzd_project</td>
+<td align="left">项目级数据，可能存放跨租户的项目元信息。</td>
+</tr>
+<tr>
+<td align="left">db_project_lun51</td>
+<td align="left">可能是旧版或另一套的项目库。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="三、功能模块库（lzd-gp-前缀）"><a href="#三、功能模块库（lzd-gp-前缀）" class="headerlink" title="三、功能模块库（lzd_gp_ 前缀）"></a>三、功能模块库（<code>lzd_gp_</code> 前缀）</h2><p>按功能拆分的库，可能用于文件、表单、文档等：</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">lzd_gp_file01 &#x2F; lzd_gp_file02</td>
+<td align="left">文件相关数据（如分片存储）。</td>
+</tr>
+<tr>
+<td align="left">lzd_gp_form01 &#x2F; lzd_gp_form02</td>
+<td align="left">表单相关数据。</td>
+</tr>
+<tr>
+<td align="left">lzd_gp_word01 &#x2F; lzd_gp_word02</td>
+<td align="left">文档&#x2F;Word 相关数据。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="四、基础设施-中间件库"><a href="#四、基础设施-中间件库" class="headerlink" title="四、基础设施 &#x2F; 中间件库"></a>四、基础设施 &#x2F; 中间件库</h2><table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">lzd_nacos3</td>
+<td align="left">Nacos 配置中心&#x2F;注册中心数据。项目 Nacos 配置中 <code>db.url.0=jdbc:mysql://.../lzd_nacos3</code>。</td>
+</tr>
+<tr>
+<td align="left">db_nacos &#x2F; lzd_nacos</td>
+<td align="left">其他 Nacos 实例或环境的库。</td>
+</tr>
+<tr>
+<td align="left">lzd_xxljob</td>
+<td align="left">XXL-Job 分布式任务调度，存任务配置、执行日志等。项目中有 <code>lzd-cfl-xxljob</code> 模块。</td>
+</tr>
+<tr>
+<td align="left">lun51monitor</td>
+<td align="left">监控相关数据（日志、指标等）。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="五、旧版-V2-租户库（db-lun51-v2-前缀）"><a href="#五、旧版-V2-租户库（db-lun51-v2-前缀）" class="headerlink" title="五、旧版 &#x2F; V2 租户库（db_lun51_v2_ 前缀）"></a>五、旧版 &#x2F; V2 租户库（<code>db_lun51_v2_</code> 前缀）</h2><table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">db_lun51_v2_hebiace_jwc</td>
+<td align="left">V2 版河海&#x2F;教务处租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_hebiace_xxgc</td>
+<td align="left">V2 版河海&#x2F;信息工程租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_jwcuestc</td>
+<td align="left">V2 版电子科大教务处租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_lun51</td>
+<td align="left">V2 版 LUN51 主库。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_lwpy</td>
+<td align="left">V2 版论无忧租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_lwpydemo</td>
+<td align="left">V2 版论无忧演示租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_mode_mini&#x2F;pro&#x2F;ultra</td>
+<td align="left">V2 版各模式租户。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_v2_tpl</td>
+<td align="left">V2 版表模板库。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="六、MySQL-系统库"><a href="#六、MySQL-系统库" class="headerlink" title="六、MySQL 系统库"></a>六、MySQL 系统库</h2><table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">information_schema</td>
+<td align="left">MySQL 元数据（库、表、列等）。分库算法用 <code>SCHEMATA</code> 判断库是否存在。</td>
+</tr>
+<tr>
+<td align="left">mysql</td>
+<td align="left">用户、权限等系统表。</td>
+</tr>
+<tr>
+<td align="left">performance_schema</td>
+<td align="left">性能监控数据。</td>
+</tr>
+<tr>
+<td align="left">sys</td>
+<td align="left">对 performance_schema 的简化视图。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="七、其他-可能非本项目"><a href="#七、其他-可能非本项目" class="headerlink" title="七、其他 &#x2F; 可能非本项目"></a>七、其他 &#x2F; 可能非本项目</h2><table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">db_123, db_ctc</td>
+<td align="left">测试或临时库。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_20201026</td>
+<td align="left">可能是某次迁移或备份。</td>
+</tr>
+<tr>
+<td align="left">db_lun51_location</td>
+<td align="left">可能与位置&#x2F;地理信息相关。</td>
+</tr>
+<tr>
+<td align="left">db_mooc</td>
+<td align="left">MOOC 平台相关。</td>
+</tr>
+<tr>
+<td align="left">db_obedu</td>
+<td align="left">在线教育相关。</td>
+</tr>
+<tr>
+<td align="left">db_lcsl</td>
+<td align="left">其他项目。</td>
+</tr>
+<tr>
+<td align="left">db_zentao</td>
+<td align="left">禅道项目管理工具。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="八、与-Nacos-配置的对应关系"><a href="#八、与-Nacos-配置的对应关系" class="headerlink" title="八、与 Nacos 配置的对应关系"></a>八、与 Nacos 配置的对应关系</h2><p><code>lzd-bsl-all-dev.yml</code> 中：</p>
+<p>spring:</p>
+<p>  datasource:</p>
+<p>​    host: 192.168.4.223</p>
+<p>​    port: 3308</p>
+<p>​    database-name: lzd_lun51    <em># 主库，应用启动时连接</em></p>
+<p>​    database-prefix: lzd        <em># 分库命名前缀</em></p>
+<p>​    global-database-sharding-by-tenant-id: true</p>
+<ul>
+<li>应用启动时连接：<code>lzd_lun51</code></li>
+<li>分库命名：<code>lzd_</code> + 租户 tid</li>
+<li>租户库（如 <code>lzd_szcu_jwc</code>）在首次访问时由 ShardingSphere 动态创建数据源并连接</li>
+</ul>
+<hr>
+<h2 id="九、结构示意"><a href="#九、结构示意" class="headerlink" title="九、结构示意"></a>九、结构示意</h2><p>┌─────────────────────────────────────────────────────────────────┐</p>
+<p>│  LongZhiDao2 数据库架构                                            │</p>
+<p>├─────────────────────────────────────────────────────────────────┤</p>
+<p>│  主库：lzd_lun51（Nacos database-name）                           │</p>
+<p>│  ├── 平台表：cfl_region, cfl_university                           │</p>
+<p>│  ├── 租户元数据：bsl_tenant_info                                   │</p>
+<p>│  └── LUN51 租户业务表                                              │</p>
+<p>├─────────────────────────────────────────────────────────────────┤</p>
+<p>│  租户库（按 tenant_id 动态路由）                                   │</p>
+<p>│  ├── lzd_szcu_jwc, lzd_mode_mini, lzd_mode_pro…                │</p>
+<p>│  └── 各租户的 bsl_tenant_* 表                                     │</p>
+<p>├─────────────────────────────────────────────────────────────────┤</p>
+<p>│  基础设施：lzd_nacos3, lzd_xxljob                                 │</p>
+<p>├─────────────────────────────────────────────────────────────────┤</p>
+<p>│  旧版：db_lun51_v2_*                                              │</p>
+<p>└─────────────────────────────────────────────────────────────────┘</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yigeljk.github.io/2026/09/05/%E8%AE%BA%E4%B9%8B%E9%81%93%E9%A1%B9%E7%9B%AE/" data-id="cmtog387j000j58u36w149cqe" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/09/05/%E6%AF%8F%E5%91%A8%E8%A7%84%E5%88%92/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/09/05/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E6%83%85%E6%84%9F%E5%92%A8%E8%AF%A2%E5%8A%A9%E6%89%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

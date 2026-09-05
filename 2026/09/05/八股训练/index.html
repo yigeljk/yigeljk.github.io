@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="3.21bing log是干什么的啊http请求由哪几部分组成的，每部分都是包含什么3.22MySQL锁的类型redis的SDS：len(以使用的字节数)，alloc(已分配的字符串)3.23IO模型 阻塞式IO 非阻塞式IO IO多路复用：select，poll，epoll  ArrayList如何实现线程安全 CopyOnWriteArrayList（读多写少的时候）写的时候会进行全量复制（只">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="https://yigeljk.github.io/2026/09/05/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="3.21bing log是干什么的啊http请求由哪几部分组成的，每部分都是包含什么3.22MySQL锁的类型redis的SDS：len(以使用的字节数)，alloc(已分配的字符串)3.23IO模型 阻塞式IO 非阻塞式IO IO多路复用：select，poll，epoll  ArrayList如何实现线程安全 CopyOnWriteArrayList（读多写少的时候）写的时候会进行全量复制（只">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-05T13:54:17.639Z">
+<meta property="article:modified_time" content="2026-04-27T00:40:32.939Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yigeljk.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-八股训练" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/05/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83/" class="article-date">
+  <time class="dt-published" datetime="2026-09-05T13:54:17.639Z" itemprop="datePublished">2026-09-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="3-21"><a href="#3-21" class="headerlink" title="3.21"></a>3.21</h1><h4 id="bing-log是干什么的啊"><a href="#bing-log是干什么的啊" class="headerlink" title="bing log是干什么的啊"></a>bing log是干什么的啊</h4><h4 id="http请求由哪几部分组成的，每部分都是包含什么"><a href="#http请求由哪几部分组成的，每部分都是包含什么" class="headerlink" title="http请求由哪几部分组成的，每部分都是包含什么"></a>http请求由哪几部分组成的，每部分都是包含什么</h4><h1 id="3-22"><a href="#3-22" class="headerlink" title="3.22"></a>3.22</h1><h4 id="MySQL锁的类型"><a href="#MySQL锁的类型" class="headerlink" title="MySQL锁的类型"></a>MySQL锁的类型</h4><h4 id="redis的SDS：len-以使用的字节数-，alloc-已分配的字符串"><a href="#redis的SDS：len-以使用的字节数-，alloc-已分配的字符串" class="headerlink" title="redis的SDS：len(以使用的字节数)，alloc(已分配的字符串)"></a>redis的SDS：len(以使用的字节数)，alloc(已分配的字符串)</h4><h1 id="3-23"><a href="#3-23" class="headerlink" title="3.23"></a>3.23</h1><h4 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h4><ul>
+<li>阻塞式IO</li>
+<li>非阻塞式IO</li>
+<li>IO多路复用：select，poll，epoll</li>
+</ul>
+<h4 id="ArrayList如何实现线程安全"><a href="#ArrayList如何实现线程安全" class="headerlink" title="ArrayList如何实现线程安全"></a>ArrayList如何实现线程安全</h4><ul>
+<li>CopyOnWriteArrayList（读多写少的时候）写的时候会进行全量复制（只要写就会全量复制，不管有没有线程安全），写操作之间会互斥</li>
+<li>synchronozedList（写比较多的时候）</li>
+</ul>
+<h4 id="ConcurrentModificationException（并发修改异常）"><a href="#ConcurrentModificationException（并发修改异常）" class="headerlink" title="ConcurrentModificationException（并发修改异常）"></a>ConcurrentModificationException（并发修改异常）</h4><ul>
+<li>当我们的遍历集合的时候，如果此时集合的长度发生变化，比如另外一个线程删除了一个元素，就会抛这个异常</li>
+<li>尤其是迭代器遍历的时候，copyOnWriteArrayList不会出现这种异常，但是如果是synchronozedList没有锁住对象，并发修改就会抛出这个异常</li>
+</ul>
+<h4 id="volatile关键字和JMM内存模型"><a href="#volatile关键字和JMM内存模型" class="headerlink" title="volatile关键字和JMM内存模型"></a>volatile关键字和JMM内存模型</h4><ul>
+<li>JMM内存模型有工作区内存和主内存，工作区内存是线程私有的，主内存是线程共享的</li>
+</ul>
+<h4 id="synchronized的底层原理"><a href="#synchronized的底层原理" class="headerlink" title="synchronized的底层原理"></a>synchronized的底层原理</h4><h4 id="线程池的参数，拒绝策略（实际生产环境我们需要有报警系统，来去动态调整线程池的参数）"><a href="#线程池的参数，拒绝策略（实际生产环境我们需要有报警系统，来去动态调整线程池的参数）" class="headerlink" title="线程池的参数，拒绝策略（实际生产环境我们需要有报警系统，来去动态调整线程池的参数）"></a>线程池的参数，拒绝策略（实际生产环境我们需要有报警系统，来去动态调整线程池的参数）</h4><ul>
+<li>使用<code>threadpoolExecuter</code>来去创建线程池，是有界队列；生产环境谨慎使用<code>Executer</code>来创建线程池，因为它的队列是无界的，可能导致OOM</li>
+</ul>
+<h1 id="3-24"><a href="#3-24" class="headerlink" title="3.24"></a>3.24</h1><h4 id="rocketmq如何保证消息不丢失"><a href="#rocketmq如何保证消息不丢失" class="headerlink" title="rocketmq如何保证消息不丢失"></a>rocketmq如何保证消息不丢失</h4><ul>
+<li>消费者-生产者：我们采用</li>
+</ul>
+<h4 id="rocketmq如何保证不重复消费"><a href="#rocketmq如何保证不重复消费" class="headerlink" title="rocketmq如何保证不重复消费"></a>rocketmq如何保证不重复消费</h4><ul>
+<li><p>业务容许使用唯一id‘</p>
+</li>
+<li><p>使用去重表：插入去重表和执行业务逻辑一起加上事务，当表里面有消息的时候会抛异常，回滚</p>
+</li>
+<li><p>Redis的set集合去重，使用lua脚本判断消息是否存在，存在返回0，不存在返回1，set集合里面add这条消息，Java程序判断是否是0还是1，在使用try-catch，如果失败，set集合里面把元素删除</p>
+</li>
+</ul>
+<h1 id="3-25"><a href="#3-25" class="headerlink" title="3.25"></a>3.25</h1><h4 id="死锁的条件，如何来方式死锁啊"><a href="#死锁的条件，如何来方式死锁啊" class="headerlink" title="死锁的条件，如何来方式死锁啊"></a>死锁的条件，如何来方式死锁啊</h4><h4 id="进程上下文开销和线程的上下文开销哪个大，页表是什么，存储在哪里啊"><a href="#进程上下文开销和线程的上下文开销哪个大，页表是什么，存储在哪里啊" class="headerlink" title="进程上下文开销和线程的上下文开销哪个大，页表是什么，存储在哪里啊"></a>进程上下文开销和线程的上下文开销哪个大，页表是什么，存储在哪里啊</h4><h4 id="我们的项目里面如何进行权限校验啊？（这个很重要）"><a href="#我们的项目里面如何进行权限校验啊？（这个很重要）" class="headerlink" title="我们的项目里面如何进行权限校验啊？（这个很重要）"></a>我们的项目里面如何进行权限校验啊？（这个很重要）</h4><h4 id="spring-mvc的拦截器和过滤器"><a href="#spring-mvc的拦截器和过滤器" class="headerlink" title="spring mvc的拦截器和过滤器"></a>spring mvc的拦截器和过滤器</h4><ul>
+<li>过滤器是在tomcat层面来去实现的 , 是在dispatcherservlet执行前来实现的</li>
+<li>拦截器是在spring mvc层面来实现的 , 在dispatcherservlet执行<strong>handermapping后</strong> , 执行<strong>handeradapter前</strong>来执行的</li>
+<li>过滤器是</li>
+<li>拦截器是进行进行用户校验的 , 比如说可以校验<strong>jwt</strong></li>
+</ul>
+<h4 id="springboot处理请求的原理是啥啊"><a href="#springboot处理请求的原理是啥啊" class="headerlink" title="springboot处理请求的原理是啥啊"></a>springboot处理请求的原理是啥啊</h4><ul>
+<li>通过spring mvc的<strong>dispatcherservlet</strong>来统一处理请求 , 先调用<strong>handermapping</strong>来匹配到对应url的controller接口 , 然后去执行<strong>handeradapter</strong>来去执行对应的controller方法</li>
+</ul>
+<h4 id="Java的NIO和netty网络框架是啥啊-请你解释一下"><a href="#Java的NIO和netty网络框架是啥啊-请你解释一下" class="headerlink" title="Java的NIO和netty网络框架是啥啊,请你解释一下"></a>Java的NIO和netty网络框架是啥啊,请你解释一下</h4><ul>
+<li>NIO的本质就是我们的用户监听线程直接系统调用取到Linux内核为我们进程维护的socket就绪队列 , 当我们的socket连接有请求的时候 , 内核会唤醒我们的用户主线程 , 然后我们的用户监听线程会拿到我们的对应就绪的socket,从内核空间搬运到用户空间进行处理</li>
+<li>Netty网络框架是基于NIO的 , 解决NIO的空轮询bug  ,  明明没有就绪socket , 却一直无故返回0</li>
+<li>Selector 就是 Java NIO 对 Linux epoll 的封装！</li>
+</ul>
+<h4 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h4><ul>
+<li>适合超大堆</li>
+</ul>
+<h4 id="为什么我们要对堆进行分代啊-请你解释一下"><a href="#为什么我们要对堆进行分代啊-请你解释一下" class="headerlink" title="为什么我们要对堆进行分代啊,请你解释一下"></a>为什么我们要对堆进行分代啊,请你解释一下</h4><ul>
+<li><p>因为大多数对象的生命周期都是比较短暂的 , 分代可以把短命对象和长命对象进行分别处理 , 而不是每次GC都进行扫描整个堆</p>
+</li>
+<li><p>young gc里面的对象存活时间短 , 我们采用标记复制的算法进行频繁极快的回收</p>
+</li>
+<li><p>而老年代里面的对象存活时间长 , 我们回收的频率就比较低</p>
+</li>
+<li><p>为了提高整体的扫描效率</p>
+</li>
+</ul>
+<h4 id="我们如何判断一个对象是否为垃圾对象啊"><a href="#我们如何判断一个对象是否为垃圾对象啊" class="headerlink" title="我们如何判断一个对象是否为垃圾对象啊"></a>我们如何判断一个对象是否为垃圾对象啊</h4><ul>
+<li>可达性分析法 &#x2F; 引用计数法</li>
+<li>可达性分析法是从GC Roots出发的一条引用链上的对象为存活对象 , 不在引用链上的对象就是垃圾对象</li>
+<li>GC Roots有虚拟机栈 , 本地方法栈 , 方法区</li>
+</ul>
+<h4 id="http2-0和其他版本有什么优点啊"><a href="#http2-0和其他版本有什么优点啊" class="headerlink" title="http2.0和其他版本有什么优点啊"></a>http2.0和其他版本有什么优点啊</h4><ul>
+<li>支持多路复用</li>
+<li>请求头压缩</li>
+<li>二进制分帧</li>
+</ul>
+<h4 id="3-27"><a href="#3-27" class="headerlink" title="3.27"></a>3.27</h4><ul>
+<li>lsof,ss命令,ps,netstat</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yigeljk.github.io/2026/09/05/%E5%85%AB%E8%82%A1%E8%AE%AD%E7%BB%83/" data-id="cmtog387d000b58u37n1tejj5" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/09/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/09/05/%E5%85%AB%E8%82%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E8%AF%86%E7%82%B9%E5%AD%A6%E4%B9%A0%E6%B8%85%E5%8D%95/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%9F%A5%E5%85%89%E5%B9%B3%E5%8F%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E5%B8%88%E5%85%84%E7%BB%8F%E9%AA%8C/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E6%83%85%E6%84%9F%E5%92%A8%E8%AF%A2%E5%8A%A9%E6%89%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/05/%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
