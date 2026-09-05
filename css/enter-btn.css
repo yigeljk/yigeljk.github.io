@@ -1,0 +1,71 @@
+/* ========================================
+   自定义首页"进入博客"按钮样式
+   ======================================== */
+
+#page-header.full_page #scroll-down {
+  position: absolute;
+  top: 75%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  z-index: 10;
+  cursor: pointer;
+  animation: float-in 1.2s ease-in-out infinite alternate;
+}
+
+#page-header.full_page #scroll-down .enter-blog-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 36px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+#page-header.full_page #scroll-down .enter-blog-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 32px rgba(73, 177, 245, 0.4);
+  transform: scale(1.05);
+  text-shadow: 0 2px 12px rgba(73, 177, 245, 0.6);
+}
+
+#page-header.full_page #scroll-down .enter-blog-btn i {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+#page-header.full_page #scroll-down .enter-blog-btn:hover i {
+  transform: translateX(4px);
+}
+
+@keyframes float-in {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(6px);
+  }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  #page-header.full_page #scroll-down .enter-blog-btn {
+    padding: 12px 28px;
+    font-size: 16px;
+  }
+}
