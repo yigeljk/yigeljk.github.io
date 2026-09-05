@@ -1,0 +1,61 @@
+/* 文章页底部上下篇 - 扁长方形胶囊 */
+#pagination.pagination-post {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hr-border, #e3e3e3);
+}
+
+#pagination.pagination-post .pagination-related {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.05rem 0.9rem;
+  min-width: 12rem;
+  max-width: 18rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: var(--sidebar-bg, rgba(255, 255, 255, 0.6));
+  color: var(--font-color, #333);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: background 0.2s, transform 0.2s;
+}
+
+#pagination.pagination-post .pagination-related.prev {
+  margin-right: auto;
+}
+
+#pagination.pagination-post .pagination-related.next {
+  margin-left: auto;
+}
+
+#pagination.pagination-post .pagination-related:hover {
+  background: rgba(73, 177, 245, 0.12);
+  transform: translateY(-1px);
+}
+
+#pagination.pagination-post .pagination-related i {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--font-color, #333);
+}
+
+#pagination.pagination-post .pagination-related .pagination-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* 隐藏旧卡片残留 */
+#pagination.pagination-post .cover,
+#pagination.pagination-post .info,
+#pagination.pagination-post img.cover {
+  display: none !important;
+}
