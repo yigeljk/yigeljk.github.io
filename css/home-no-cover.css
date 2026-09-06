@@ -1,0 +1,14 @@
+/* 去掉首页文章封面后,让卡片变成全宽纵向布局 */
+#recent-posts .recent-post-item {
+  height: auto !important;
+  display: block !important;
+}
+
+#recent-posts .recent-post-item .recent-post-info {
+  width: 100% !important;
+  padding: 25px 30px !important;
+}
+
+#recent-posts .recent-post-item .post_cover {
+  display: none !important;
+}
