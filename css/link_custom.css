@@ -1,0 +1,42 @@
+/* ==========================================================================
+ * 友链卡片样式
+ *   1. 头像完整显示,不裁切(不强制拉伸)
+ *   2. 描述全部隐藏
+ *   3. 整张卡片都可点击
+ *   4. 头像大小、动画恢复 butterfly 默认(60×60 + 悬停时向左收缩)
+ * ========================================================================== */
+
+/* 1. 头像完整显示,不裁切 */
+#article-container .flink-list .flink-list-item .flink-item-icon img {
+  object-fit: contain !important;
+}
+
+/* 2. 隐藏描述 */
+#article-container .flink-list .flink-list-item .flink-item-desc {
+  display: none !important;
+}
+
+/* 3. 整张卡片都可点击 */
+#article-container .flink-list .flink-list-item a {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#article-container .flink-list .flink-list-item a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#article-container .flink-list .flink-list-item .flink-item-name {
+  padding: 16px 10px 0 0 !important;
+  display: inline-block !important;
+  position: relative;
+  z-index: 2;
+}
